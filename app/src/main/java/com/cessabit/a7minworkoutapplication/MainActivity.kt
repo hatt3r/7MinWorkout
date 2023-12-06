@@ -1,5 +1,6 @@
 package com.cessabit.a7minworkoutapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
@@ -19,11 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         //val flStartButton: FrameLayout = findViewById(R.id.flStart)
         binding?.flStart?.setOnClickListener {
-            Toast.makeText(
-                this,
-                "here we will start ",
-                Toast.LENGTH_SHORT
-            ).show()
+            val intent = Intent(this, ExcerciseActivity::class.java)
+            startActivity(intent)
         }
     }
 
