@@ -23,9 +23,9 @@
         android:textColor="@color/colorAccent"
         android:textSize="22sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/flProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/flProgressBar" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <FrameLayout
@@ -46,11 +46,11 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:background="@drawable/circular_progress_grey"
+            android:indeterminate="false"
             android:max="10"
             android:progress="100"
             android:progressDrawable="@drawable/circular_progress_bar"
-            android:rotation="-90"
-            android:indeterminate="false"/>
+            android:rotation="-90" />
 
         <LinearLayout
             android:layout_width="60dp"
@@ -66,13 +66,9 @@
                 android:text="10"
                 android:textColor="#ffffff"
                 android:textSize="25sp"
-                android:textStyle="bold"
-
-
-                />
+                android:textStyle="bold" />
 
         </LinearLayout>
-
 
     </FrameLayout>
 
