@@ -8,7 +8,10 @@ import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
+import android.widget.Adapter
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.cessabit.a7minworkoutapplication.databinding.ActivityExcerciseBinding
 import java.util.Locale
 
@@ -24,6 +27,7 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var exerciseList: ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
 
+    private var exerciseAdapter: ExerciseStatusAdapter? = null
 
     private var binding: ActivityExcerciseBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +46,18 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             onBackPressed()
         }
         setupRestView()
+        setupExerciseStatusRecyclerView()
+    }
+
+    private fun setupExerciseStatusRecyclerView() {
+        binding?.rvExerciseStatus?.layoutManager =
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
+        binding?.rvExerciseStatus?.adapter = exerciseAdapter
     }
 
     private fun setupRestView() {
@@ -50,7 +66,7 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 Uri.parse(
                     "android.resource://com.cessabit.a7minworkoutapplication/" + R.raw.press_start
                 )
-            player = MediaPlayer.create(applicationContext,soundURI)
+            player = MediaPlayer.create(applicationContext, soundURI)
             player?.isLooping = false
             player?.start()
         } catch (e: Exception) {
@@ -112,6 +128,9 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
                 currentExercisePosition++
+                exerciseList!![currentExercisePosition].setIsSelected(true)
+                exerciseAdapter!!.notifyDataSetChanged()
+
                 setupExerciseView()
             }
         }.start()
@@ -128,6 +147,10 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
+                exerciseList!![currentExercisePosition].setIsSelected(false)
+                exerciseList!![currentExercisePosition].setIsCompleted(true)
+                exerciseAdapter!!.notifyDataSetChanged()
+
                 if (currentExercisePosition < exerciseList?.size!! - 1) {
                     setupRestView()
                 } else {
@@ -155,8 +178,7 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             tts!!.stop()
             tts!!.shutdown()
         }
-        if(player != null)
-        {
+        if (player != null) {
             player!!.stop()
         }
 
