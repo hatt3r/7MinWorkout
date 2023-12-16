@@ -1,5 +1,6 @@
 package com.cessabit.a7minworkoutapplication
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -14,26 +15,47 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.cessabit.a7minworkoutapplication.databinding.ActivityExcerciseBinding
+import com.cessabit.a7minworkoutapplication.databinding.DialogCustomBackConfirmationBinding
 import java.util.Locale
 
 class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+    
+    // - variable for the rest counter timer that is 10 seconds
+    //START
+    private var restTimer: CountDownTimer? = null   //variable for rest timer and later will be initialized
+    private var restProgress = 0    //variable for timer progress. As Initial value the rest progress is set to 0.
+    //END
+    
+    // - variables for exercise timer that is 30 seconds
+    //START
+    private var exerciseTimer: CountDownTimer? = null   //variable for the exercise timer and later will be initialized
+    private var exerciseProgress = 0    //variable exercise timer progress. as initial value is set to 0.
+    //END
+    
+    private var tts: TextToSpeech? = null    //variable for Text To Speech
 
-    private var restTimer: CountDownTimer? = null
-    private var restProgress = 0
-    private var exerciseTimer: CountDownTimer? = null
-    private var exerciseProgress = 0
-    private var tts: TextToSpeech? = null
+    //variable for Media player for playing a notification sound when the exercise is about to start
+    //START
     private var player: MediaPlayer? = null
+    //END
 
-    private var exerciseList: ArrayList<ExerciseModel>? = null
-    private var currentExercisePosition = -1
+    //variable for the exercise list and current position of exercise
+    //START
+    private var exerciseList: ArrayList<ExerciseModel>? = null      //we will initialize the list later
+    private var currentExercisePosition = -1        //current position of exercise
+    //END
 
+    //Declaring a variable of an adapter class to bind to recycler view
+    //START
+    //object will be initialized later
     private var exerciseAdapter: ExerciseStatusAdapter? = null
+    //END
 
-    private var restTimerDuration:Long = 1
-    private var exerciseTimerDuration: Long = 1
 
-    private var binding: ActivityExcerciseBinding? = null
+    private var restTimerDuration: Long = 1     //this variable is used when testing by assigning value here we can change the time for rest timer because 1 is 1 second hence change accordingly
+    private var exerciseTimerDuration: Long = 1     //this variable is used when testing by assigning value here we can change the time for  Exercise timer because 1 is 1 second hence change accordingly
+
+    private var binding: ActivityExcerciseBinding? = null   //Declaring a binding Variable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExcerciseBinding.inflate(layoutInflater)
@@ -47,10 +69,30 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         exerciseList = Constants.defaultExerciseList()
 
         binding?.tbexcercise?.setNavigationOnClickListener {
-            onBackPressed()
+            customeDialogForBackButton()
         }
         setupRestView()
         setupExerciseStatusRecyclerView()
+    }
+
+    override fun onBackPressed() {
+        customeDialogForBackButton()
+        //super.onBackPressed()
+    }
+
+    private fun customeDialogForBackButton() {
+        val customDialog = Dialog(this)
+        val dialogBinding = DialogCustomBackConfirmationBinding.inflate(layoutInflater)
+        customDialog.setContentView(dialogBinding.root)
+        customDialog.setCanceledOnTouchOutside(true)
+        dialogBinding.btnYes.setOnClickListener {
+            this@ExcerciseActivity.finish()
+            customDialog.dismiss()
+        }
+        dialogBinding.btnNo.setOnClickListener {
+            customDialog.dismiss()
+        }
+        customDialog.show()
     }
 
     private fun setupExerciseStatusRecyclerView() {
@@ -123,7 +165,7 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun setRestProgressBar() {
         binding?.progressBar?.progress = restProgress
 
-        restTimer = object : CountDownTimer(restTimerDuration*1000, 1000) {
+        restTimer = object : CountDownTimer(restTimerDuration * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++
                 binding?.progressBar?.progress = 10 - restProgress
@@ -143,7 +185,7 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun setExerciseProgressBar() {
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(exerciseTimerDuration*1000, 1000) {
+        exerciseTimer = object : CountDownTimer(exerciseTimerDuration * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
                 binding?.progressBarExercise?.progress = 10 - exerciseProgress
@@ -151,8 +193,6 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
-
-
                 if (currentExercisePosition < exerciseList?.size!! - 1) {
                     exerciseList!![currentExercisePosition].setIsSelected(false)
                     exerciseList!![currentExercisePosition].setIsCompleted(true)
@@ -160,7 +200,7 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     setupRestView()
                 } else {
                     finish()
-                    val intent = Intent(this@ExcerciseActivity,FinishActivity::class.java)
+                    val intent = Intent(this@ExcerciseActivity, FinishActivity::class.java)
                     startActivity(intent)
                 }
             }
