@@ -19,19 +19,19 @@ import com.cessabit.a7minworkoutapplication.databinding.DialogCustomBackConfirma
 import java.util.Locale
 
 class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
-    
+
     // - variable for the rest counter timer that is 10 seconds
     //START
     private var restTimer: CountDownTimer? = null   //variable for rest timer and later will be initialized
     private var restProgress = 0    //variable for timer progress. As Initial value the rest progress is set to 0.
     //END
-    
+
     // - variables for exercise timer that is 30 seconds
     //START
     private var exerciseTimer: CountDownTimer? = null   //variable for the exercise timer and later will be initialized
     private var exerciseProgress = 0    //variable exercise timer progress. as initial value is set to 0.
     //END
-    
+
     private var tts: TextToSpeech? = null    //variable for Text To Speech
 
     //variable for Media player for playing a notification sound when the exercise is about to start
@@ -52,10 +52,10 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     //END
 
 
-    private var restTimerDuration: Long = 1     //this variable is used when testing by assigning value here we can change the time for rest timer because 1 is 1 second hence change accordingly
-    private var exerciseTimerDuration: Long = 1     //this variable is used when testing by assigning value here we can change the time for  Exercise timer because 1 is 1 second hence change accordingly
+    private var restTimerDuration: Long = 10   //this variable is used when testing by assigning value here we can change the time for rest timer because 1 is 1 second hence change accordingly
+    private var exerciseTimerDuration: Long = 30     //this variable is used when testing by assigning value here we can change the time for  Exercise timer because 1 is 1 second hence change accordingly
 
-    private var binding: ActivityExcerciseBinding? = null   //Declaring a binding Variable
+    private var binding: ActivityExcerciseBinding? = null   //Declaring a data binding Variable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExcerciseBinding.inflate(layoutInflater)
@@ -188,8 +188,8 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         exerciseTimer = object : CountDownTimer(exerciseTimerDuration * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                binding?.progressBarExercise?.progress = 10 - exerciseProgress
-                binding?.tvTimerExercise?.text = (10 - exerciseProgress).toString()
+                binding?.progressBarExercise?.progress = 30 - exerciseProgress
+                binding?.tvTimerExercise?.text = (30 - exerciseProgress).toString()
             }
 
             override fun onFinish() {
