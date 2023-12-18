@@ -52,8 +52,8 @@ class ExcerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     //END
 
 
-    private var restTimerDuration: Long = 10   //this variable is used when testing by assigning value here we can change the time for rest timer because 1 is 1 second hence change accordingly
-    private var exerciseTimerDuration: Long = 30     //this variable is used when testing by assigning value here we can change the time for  Exercise timer because 1 is 1 second hence change accordingly
+    private var restTimerDuration: Long = 1   //this variable is used when testing by assigning value here we can change the time for rest timer because 1 is 1 second hence change accordingly
+    private var exerciseTimerDuration: Long = 1     //this variable is used when testing by assigning value here we can change the time for  Exercise timer because 1 is 1 second hence change accordingly
 
     private var binding: ActivityExcerciseBinding? = null   //Declaring a data binding Variable
     override fun onCreate(savedInstanceState: Bundle?) {
